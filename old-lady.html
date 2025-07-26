@@ -503,15 +503,15 @@
                 }
 
                 try {
-                    const response = await fetch('https://ubuntu.tail2124eb.ts.net/ar/feedback', {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            email: userEmail,
-                            star: parseInt(rating)
-                        })
+                    const response = await fetch('http://localhost:8000/ar/save_score', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        player_id: playerId, // Use player_id instead of email
+                        score: selectedRating // Use selected rating as score
+                    })
                     });
 
                     const data = await response.json();
