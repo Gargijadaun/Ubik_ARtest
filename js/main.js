@@ -878,52 +878,56 @@ function init() {
             arSystem.unpause()
         }
       // Get playerId from localStorage
-const playerId = localStorage.getItem('playerId');
+targetImage.addEventListener("targetFound", () => {
+    console.log("Target found");
+
+    // Start timer only if not already running
+    if (!targetStartTime) {
+        targetStartTime = Date.now();
+        console.log("Timer started at:", targetStartTime);
+    }
+
+    startAnimation(); // your existing animation
+});
 
 targetImage.addEventListener("targetLost", () => {
     console.log("Target lost");
 
     if (targetStartTime) {
-        const duration = Date.now() - targetStartTime; // duration of this session
-        totalViewTime += duration;                     // add to total
+        const duration = Date.now() - targetStartTime; // session duration
+        totalViewTime += duration;
 
-        console.log("Session view time (ms):", duration);
+        console.log("Session duration (ms):", duration);
         console.log("Total accumulated time (ms):", totalViewTime);
 
+        const playerId = localStorage.getItem('playerId');
         if (!playerId) {
-            console.error("No playerId found! Please register first.");
-            alert("Please register before using the AR experience.");
+            console.error("No playerId found! Cannot save time.");
+            targetStartTime = null;
             return;
         }
 
-        // Send session + total time to backend using PATCH
         fetch("https://ubikback-production.up.railway.app/ar/save_time_girl", {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-                player_id: playerId,   // send playerId
-                sessionViewTime: duration, 
-                totalViewTime 
+            body: JSON.stringify({
+                player_id: playerId,
+                session_time: duration,    // adjust to backend expected keys
+                total_time: totalViewTime
             })
         })
-        .then(res => res.json())
-        .then(data => console.log("Saved view time:", data))
+        .then(res => {
+            console.log("Server response status:", res.status);
+            return res.json();
+        })
+        .then(data => console.log("Saved view time response:", data))
         .catch(err => console.error("Error saving view time:", err));
 
-        targetStartTime = null;   // reset timer for next session
-        resetAnimation();         // your existing reset
+        // Reset timer for next session
+        targetStartTime = null;
+        resetAnimation();
     }
 });
-
-targetImage.addEventListener("targetFound", () => {
-    console.log("Target found");
-    // Only start timer if it’s not already running
-    if (!targetStartTime) {
-        targetStartTime = Date.now();
-    }
-    startAnimation(); // your existing animation
-});
-
 
         // arError event triggered when something went wrong. Mostly browser compatbility issue
         sceneEl.addEventListener("arError", (event) => {
