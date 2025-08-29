@@ -299,7 +299,7 @@ function startAnimationCommonCauses() {
             treatmentsBtn.classList.add('show-single')
             replayButton.classList.add('show')
         setTimeout(function () {
-    rateExperienceBtn.style.display = "block";
+    rateExperienceBtn.style.display = "none";
 }, 11000);
             showReplayButton();
             TIMELINE_DETAILS.isAnimationPlaying = false
@@ -615,7 +615,7 @@ function startAnimationTreatments() {
             testimonialsBtn.classList.add('show-single')
             replayButton.style.display = "block"; 
                setTimeout(function () {
-    rateExperienceBtn.style.display = "block";
+    rateExperienceBtn.style.display = "none";
 }, 7000);
             replayButton.classList.remove('hide'); 
             replayButton.classList.add('show')
@@ -897,7 +897,7 @@ document.addEventListener('DOMContentLoaded', function () {
         replayButton.classList.remove('hide'); 
         replayButton.classList.add('show'); 
           setTimeout(function () {
-    rateExperienceBtn.style.display = "block";
+    rateExperienceBtn.style.display = "none";
 }, 8000);
     }
 

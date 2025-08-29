@@ -352,7 +352,7 @@ setTimeout(() => {
                 showReplayButton();
                 replayButton.classList.add("show");
                    
-    rateExperienceBtn.style.display = "block";
+    rateExperienceBtn.style.display = "none";
 
                 TIMELINE_DETAILS.isAnimationPlaying = false
                 TIMELINE_DETAILS.currentAnimationSeq = 1
@@ -573,7 +573,7 @@ function startAnimationTreatments() {
             showReplayButton();
             replayButton.classList.add('show');
                setTimeout(function () {
-    rateExperienceBtn.style.display = "block";
+    rateExperienceBtn.style.display = "none";
 }, 13000);
             TIMELINE_DETAILS.isAnimationPlaying = false
 
@@ -823,7 +823,7 @@ audioSource.setAttribute('src', './assets/audio/old-lady/thread/femaleVO_OldLady
             showReplayButton();
             replayButton.classList.add("show");
                setTimeout(function () {
-    rateExperienceBtn.style.display = "block";
+    rateExperienceBtn.style.display = "none";
 }, 10000);
             TIMELINE_DETAILS.isAnimationPlaying = false
             whiteCircleRight2.setAttribute('animation', 'property: material.opacity; to: 0; dur: 500;')
@@ -1032,7 +1032,7 @@ function showReplayButton() {
     replayButton.classList.remove('hide'); 
     replayButton.classList.add('show'); 
        setTimeout(function () {
-    rateExperienceBtn.style.display = "block";
+    rateExperienceBtn.style.display = "none";
 }, 8000);
 }
 

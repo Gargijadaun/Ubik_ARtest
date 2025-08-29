@@ -359,7 +359,7 @@ function startAnimationCommonCauses() {
         treatmentsBtn.classList.add('show-single')
         replayButton.classList.add('show')
          setTimeout(function () {
-    rateExperienceBtn.style.display = "block";
+    rateExperienceBtn.style.display = "none";
 }, 7000);
         showReplayButton();
       
@@ -628,7 +628,7 @@ mainScreen.classList.add('hide')
         testimonialsBtn.classList.add('show-single')
         replayButton.classList.add('show')
        
-    rateExperienceBtn.style.display = "block";
+    rateExperienceBtn.style.display = "none";
 
         showReplayButton();
         TIMELINE_DETAILS.isAnimationPlaying = false
