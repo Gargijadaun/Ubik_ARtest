@@ -879,15 +879,17 @@ function init() {
         }
     targetImage.addEventListener("targetLost", () => {
     console.log("Target lost");
+
     if (targetStartTime) {
         const duration = Date.now() - targetStartTime; // duration of this session
         totalViewTime += duration;                     // add to total
+
         console.log("Session view time (ms):", duration);
         console.log("Total accumulated time (ms):", totalViewTime);
 
-        // Optional: send only this session or total time
+        // Send session + total time to backend using PATCH
         fetch("https://ubikback-production.up.railway.app/ar/save_time_girl", {
-            method: "POST",
+            method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ sessionViewTime: duration, totalViewTime })
         })

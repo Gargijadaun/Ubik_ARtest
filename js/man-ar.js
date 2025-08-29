@@ -769,16 +769,16 @@ targetImage.addEventListener("targetLost", () => {
     console.log("Target lost");
 
     if (targetStartTime) {
-        const sessionTime = Date.now() - targetStartTime;  // duration of this session
-        totalViewTime += sessionTime;
-        targetStartTime = null;
+        const sessionTime = Date.now() - targetStartTime;  // Duration of this session
+        totalViewTime += sessionTime;                      // Add to total
+        targetStartTime = null;                            // Reset for next session
 
         console.log("Session view time (ms):", sessionTime);
         console.log("Total accumulated view time (ms):", totalViewTime);
 
-        // Optional: send to backend
+        // Send data to backend for 'boy' target
         fetch("https://ubikback-production.up.railway.app/ar/save_time_boy", {
-            method: "POST",
+            method: "POST", // Or PATCH if updating an existing record
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ sessionViewTime: sessionTime, totalViewTime })
         })
@@ -787,8 +787,9 @@ targetImage.addEventListener("targetLost", () => {
         .catch(err => console.error("Error saving view time:", err));
     }
 
-    resetAnimation();  // Keep existing animation reset logic
+    resetAnimation();  // Reset your animations
 });
+
 
         // arError event triggered when something went wrong. Mostly browser compatbility issue
         sceneEl.addEventListener("arError", (event) => {
