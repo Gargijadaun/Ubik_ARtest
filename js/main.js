@@ -894,7 +894,7 @@ targetImage.addEventListener("targetLost", () => {
     console.log("Target lost");
 
     if (targetStartTime) {
-        const duration = Date.now() - targetStartTime; // session duration
+        const duration = Date.now() - targetStartTime; // session duration in ms
         totalViewTime += duration;
 
         console.log("Session duration (ms):", duration);
@@ -907,13 +907,17 @@ targetImage.addEventListener("targetLost", () => {
             return;
         }
 
+        // Convert ms to seconds if backend expects seconds
+        const durationSeconds = Math.floor(duration / 1000);
+        const totalSeconds = Math.floor(totalViewTime / 1000);
+
         fetch("https://ubikback-production.up.railway.app/ar/save_time_girl", {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 player_id: playerId,
-                session_time: duration,    // adjust to backend expected keys
-                total_time: totalViewTime
+                time_seconds: durationSeconds,      // backend expects this field
+                total_time_seconds: totalSeconds    // optional, adjust if backend requires
             })
         })
         .then(res => {
@@ -923,11 +927,11 @@ targetImage.addEventListener("targetLost", () => {
         .then(data => console.log("Saved view time response:", data))
         .catch(err => console.error("Error saving view time:", err));
 
-        // Reset timer for next session
         targetStartTime = null;
         resetAnimation();
     }
 });
+
 
         // arError event triggered when something went wrong. Mostly browser compatbility issue
         sceneEl.addEventListener("arError", (event) => {
