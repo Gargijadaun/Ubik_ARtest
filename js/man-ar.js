@@ -11,6 +11,8 @@ const TIMELINE_DETAILS = {
 
 const TIMEOUTS = []
 let AR_READY = false
+let targetStartTime = null;  // When target is found
+let totalViewTime = 0;       // Accumulated view time across multiple sightings
 
 // AR Elements
 const baseBlurLayer = document.querySelector('#baseBlurLayer');
@@ -752,8 +754,42 @@ function init() {
         } else {
             arSystem.unpause()
         }
-        targetImage.addEventListener("targetFound", startAnimation);
-        targetImage.addEventListener("targetLost", resetAnimation);
+    targetImage.addEventListener("targetFound", () => {
+    console.log("Target found");
+
+    // Start timer if not already started
+    if (!targetStartTime) {
+        targetStartTime = Date.now();
+    }
+
+    startAnimation();
+});
+
+targetImage.addEventListener("targetLost", () => {
+    console.log("Target lost");
+
+    if (targetStartTime) {
+        const sessionTime = Date.now() - targetStartTime;  // duration of this session
+        totalViewTime += sessionTime;
+        targetStartTime = null;
+
+        console.log("Session view time (ms):", sessionTime);
+        console.log("Total accumulated view time (ms):", totalViewTime);
+
+        // Optional: send to backend
+        fetch("https://ubikback-production.up.railway.app/ar/save_time_boy", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sessionViewTime: sessionTime, totalViewTime })
+        })
+        .then(res => res.json())
+        .then(data => console.log("Saved view time:", data))
+        .catch(err => console.error("Error saving view time:", err));
+    }
+
+    resetAnimation();  // Keep existing animation reset logic
+});
+
         // arError event triggered when something went wrong. Mostly browser compatbility issue
         sceneEl.addEventListener("arError", (event) => {
             console.log("MindAR failed to start")

@@ -109,8 +109,8 @@
                 // Hide the rating button when going back
                 const rateBtn = document.getElementById('rateExperienceBtn');
                 if (rateBtn) {
-                    rateBtn.style.display = 'none';
-                    rateBtn.disabled = true;
+                    // rateBtn.style.display = 'none';
+                    // rateBtn.disabled = f;
                 }
                 window.history.back();
             }
@@ -634,7 +634,7 @@
                 if (countdown <= 0) {
                     clearInterval(countdownInterval);
                     rateBtn.disabled = false;
-                    rateBtn.style.opacity = '1';
+                    rateBtn.style.opacity = '0';
                     rateBtn.textContent = 'Rate Experience';
                 }
             }, 1000);

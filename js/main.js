@@ -19,6 +19,9 @@ const messages = [
     ''
 ];
 
+let targetStartTime = null; // when the target is found
+let totalViewTime = 0;      // cumulative view time across multiple sightings
+
 
 let index = 0;
 // AR Elements
@@ -874,8 +877,38 @@ function init() {
         } else {
             arSystem.unpause()
         }
-        targetImage.addEventListener("targetLost", resetAnimation);
-        targetImage.addEventListener("targetFound", startAnimation);
+    targetImage.addEventListener("targetLost", () => {
+    console.log("Target lost");
+    if (targetStartTime) {
+        const duration = Date.now() - targetStartTime; // duration of this session
+        totalViewTime += duration;                     // add to total
+        console.log("Session view time (ms):", duration);
+        console.log("Total accumulated time (ms):", totalViewTime);
+
+        // Optional: send only this session or total time
+        fetch("https://ubikback-production.up.railway.app/ar/save_time_girl", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sessionViewTime: duration, totalViewTime })
+        })
+        .then(res => res.json())
+        .then(data => console.log("Saved view time:", data))
+        .catch(err => console.error("Error saving view time:", err));
+
+        targetStartTime = null;   // reset timer for next session
+        resetAnimation();         // your existing reset
+    }
+});
+
+        targetImage.addEventListener("targetFound", () => {
+    console.log("Target found");
+    // Only start timer if it’s not already running
+    if (!targetStartTime) {
+        targetStartTime = Date.now();
+    }
+    startAnimation(); // your existing animation
+});
+
         // arError event triggered when something went wrong. Mostly browser compatbility issue
         sceneEl.addEventListener("arError", (event) => {
             console.log("MindAR failed to start")
@@ -953,7 +986,7 @@ function showReplayButton() {
     replayButton.classList.remove('hide'); 
     replayButton.classList.add('show'); 
      setTimeout(function () {
-    rateExperienceBtn.style.display = "block";
+    rateExperienceBtn.style.display = "none";
 }, 10000);
 }
 document.addEventListener('DOMContentLoaded', function () {
